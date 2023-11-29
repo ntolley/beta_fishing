@@ -12,15 +12,14 @@ from tqdm import tqdm
 import joblib
 import numpy as np
 
-nsbi_sims = 10_0
+nsbi_sims = 10_000
 tstop = 1000
 num_prior_fits = 4
 relative_beta_threshold = 0.3
-# dt = 0.05
-dt = 0.5
+dt = 0.05
 fs = 1000 / dt
 
-save_path = '/expanse/lustre/scratch/ntolley/temp_project/beta_fishing'
+save_path = '/expanse/lustre/scratch/ntolley/temp_project/beta_fishing/calcium_model'
 save_suffix = 'sbi'
 
 net = calcium_model()
@@ -52,13 +51,12 @@ for src_type in cell_types:
                 conn_indices = pick_connection(
                     net, src_gids=cell_type_lookup[src_type],
                     target_gids=cell_type_lookup[target_type],
-                    receptor=receptor)
-                
-                assert len(conn_indices) == 1
+                    receptor=receptor, loc=loc)
 
                 if len(conn_indices) == 0:
                     theta_extra['invalid_conn_list'].append(conn_name)
                 else:
+                    assert len(conn_indices) == 1
                     theta_extra['valid_conn_list'].append(conn_name)
                     theta_extra[f'{conn_name}_conn_indices'] = conn_indices
 

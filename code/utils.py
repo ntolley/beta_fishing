@@ -554,10 +554,10 @@ def beta_tuning_param_function(net, theta_dict):
     valid_conn_list = theta_dict['theta_extra']['valid_conn_list']
     for conn_name in valid_conn_list:
     
-        conn_prob_name = f'{conn_suffix}_prob'
-        conn_gbar_name = f'{conn_suffix}_gbar'
+        conn_prob_name = f'{conn_name}_prob'
+        conn_gbar_name = f'{conn_name}_gbar'
         
-        conn_indices = theta_dict['theta_extra'][f'{conn_name}_connections']
+        conn_indices = theta_dict['theta_extra'][f'{conn_name}_conn_indices']
         assert len(conn_indices) == 1
         conn_idx = conn_indices[0]
         
@@ -576,8 +576,8 @@ def beta_tuning_param_function(net, theta_dict):
         
     rate = 10
     # Add Poisson drives
-    weights_ampa_d1 = {'L2_pyramidal': theta_dict['L2e_distal'], 'L5_pyramidal': theta_dict['L5e_distal'],
-                       'L2_basket': theta_dict['L2i_distal']}
+    weights_ampa_d1 = {'L2_pyramidal': theta_dict['L2e_distal_gbar'], 'L5_pyramidal': theta_dict['L5e_distal_gbar'],
+                       'L2_basket': theta_dict['L2i_distal_gbar']}
     rates_d1 = {'L2_pyramidal': rate, 'L5_pyramidal': rate, 'L2_basket': rate}
 
     net.add_poisson_drive(
@@ -585,8 +585,8 @@ def beta_tuning_param_function(net, theta_dict):
         cell_specific=True, weights_ampa=weights_ampa_d1, weights_nmda=None, space_constant=1e50,
         synaptic_delays=0.0, probability=1.0, event_seed=seed_array[-1], conn_seed=seed_array[-2])
 
-    weights_ampa_p1 = {'L2_pyramidal': theta_dict['L2e_proximal'], 'L5_pyramidal': theta_dict['L5e_proximal'],
-                       'L2_basket': theta_dict['L2i_proximal'], 'L5_basket': theta_dict['L5i_proximal']}
+    weights_ampa_p1 = {'L2_pyramidal': theta_dict['L2e_proximal_gbar'], 'L5_pyramidal': theta_dict['L5e_proximal_gbar'],
+                       'L2_basket': theta_dict['L2i_proximal_gbar'], 'L5_basket': theta_dict['L5i_proximal_gbar']}
     rates_p1 = {'L2_pyramidal': rate, 'L5_pyramidal': rate, 'L2_basket': rate, 'L5_basket': rate}
 
     net.add_poisson_drive(
